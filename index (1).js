@@ -1,16 +1,26 @@
 // index.js
 const { Client, GatewayIntentBits } = require("discord.js");
+const express = require('express');
 
+// ====== EXPRESS (optional for Render web service) ======
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+app.get('/', (req, res) => res.send('Bot is running!'));
+app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
+
+// ====== DISCORD BOT ======
 const client = new Client({
-  const port = process.env.PORT || 2000
   intents: [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMembers,
+    GatewayIntentBits.GuildMessages,   // Add other intents as needed
+    GatewayIntentBits.MessageContent
   ],
 });
 
 // ====== CONFIG ======
-const TOKEN = process.env.TOKEN; // set this in Railway Variables
+const TOKEN = process.env.TOKEN; // set this in Render Environment Variables
 const WELCOME_CHANNEL_ID = "1436988286815178833";
 const LEAVE_CHANNEL_ID = "1436988512594296873";
 
@@ -42,15 +52,7 @@ client.on("guildMemberRemove", member => {
   const channel = member.guild.channels.cache.get(LEAVE_CHANNEL_ID);
   if (!channel) return console.error("❌ Goodbye channel not found!");
   channel.send(`😢 **${member.user.tag}** has left **NETHERVERSE SMP**. We’ll miss you! 👋`);
-  
 });
-const express = require('express');
-const app = express();
-const PORT = process.env.PORT || 3000;
-
-app.get('/', (req, res) => res.send('Bot is running!'));
-app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
-
 
 // ====== Login ======
 client.login(TOKEN);
