@@ -27,10 +27,13 @@ client.on("guildMemberAdd", member => {
   channel.send(
 `👋 **HI ${member.user} WELCOME TO NETHERVERSE SMP!**
 
-📢 Get updates at <#1323572624856715296>  
-💬 Chat with our community at <#1310116007712522333>  
+📢 Get updates at <#1436990110544560140>
+-----------------------------------------------------
+💬 Chat with our community at <#1436989839705636894>
+---------------------------------------------------------
 📖 Read rules at <#1305377381464277002>  
-⚠️ Get maintenance updates at <#1325110028251955301>`
+----------------------------------------------------------
+⚠️ Get maintenance updates at <#1436991629583192184>`
   );
 });
 
