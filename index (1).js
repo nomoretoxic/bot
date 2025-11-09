@@ -2,6 +2,7 @@
 const { Client, GatewayIntentBits } = require("discord.js");
 
 const client = new Client({
+  const port = process.env.PORT || 2000
   intents: [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMembers,
