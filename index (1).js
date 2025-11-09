@@ -1,8 +1,7 @@
-// index.js
 const { Client, GatewayIntentBits } = require("discord.js");
 const express = require('express');
 
-// ====== EXPRESS (optional for Render web service) ======
+// ====== EXPRESS ======
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -14,45 +13,23 @@ const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMembers,
-    GatewayIntentBits.GuildMessages,   // Add other intents as needed
+    GatewayIntentBits.GuildMessages,
     GatewayIntentBits.MessageContent
   ],
 });
 
 // ====== CONFIG ======
-const TOKEN = process.env.TOKEN; // set this in Render Environment Variables
+const TOKEN = process.env.TOKEN; 
 const WELCOME_CHANNEL_ID = "1436988286815178833";
 const LEAVE_CHANNEL_ID = "1436988512594296873";
 
-// ====== When Bot Is Ready ======
-client.once("ready", () => {
-  console.log(`🤖 Logged in as ${client.user.tag}`);
-});
-
-// ====== When a New Member Joins ======
-client.on("guildMemberAdd", member => {
-  const channel = member.guild.channels.cache.get(WELCOME_CHANNEL_ID);
-  if (!channel) return console.error("❌ Welcome channel not found!");
-
-  channel.send(
-`👋 **HI ${member.user} WELCOME TO NETHERVERSE SMP!**
-
-📢 Get updates at <#1436990110544560140>
------------------------------------------------------
-💬 Chat with our community at <#1436989839705636894>
----------------------------------------------------------
-📖 Read rules at <#1305377381464277002>  
-----------------------------------------------------------
-⚠️ Get maintenance updates at <#1436991629583192184>`
-  );
-});
-
-// ====== When a Member Leaves ======
+// ====== EVENTS ======
 client.on("guildMemberRemove", member => {
   const channel = member.guild.channels.cache.get(LEAVE_CHANNEL_ID);
   if (!channel) return console.error("❌ Goodbye channel not found!");
   channel.send(`😢 **${member.user.tag}** has left **NETHERVERSE SMP**. We’ll miss you! 👋`);
 });
 
-// ====== Login ======
+// ====== LOGIN ======
 client.login(TOKEN);
+
