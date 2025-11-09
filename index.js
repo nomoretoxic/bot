@@ -20,7 +20,7 @@ const client = new Client({
 
 // ====== CONFIG ======
 const TOKEN = process.env.TOKEN; 
-const WELCOME_CHANNEL_ID = "1436988286815178833";
+const WELCOME_CHANNEL_ID = "1436988512594296873";
 const LEAVE_CHANNEL_ID = "1436988512594296873";
 
 // ====== EVENTS ======
