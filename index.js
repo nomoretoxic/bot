@@ -1,31 +1,41 @@
 // index.js
 const { Client, GatewayIntentBits } = require("discord.js");
+const express = require('express');
 
-const client = new Client({
-  intents: [
-    const port = process.env.PORT || 2000
-    GatewayIntentBits.Guilds,
-    GatewayIntentBits.GuildMembers,
-  ],
-});
+// ====== EXPRESS SERVER (keeps hosting platform happy) ======
+const app = express();
+const PORT = process.env.PORT || 2000;
+
+app.get('/', (req, res) => res.send('Bot is running!'));
+app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
 
 // ====== CONFIG ======
-const TOKEN = process.env.TOKEN; // set this in Railway Variables
+const TOKEN = process.env.TOKEN; // Set in Railway/Render environment variables
 const WELCOME_CHANNEL_ID = "1436988286815178833";
 const LEAVE_CHANNEL_ID = "1436988512594296873";
 
-// ====== When Bot Is Ready ======
-client.once("ready", () => {
-  console.log(`🤖 Logged in as ${client.user.tag}`);
+// ====== DISCORD CLIENT ======
+const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMembers,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.MessageContent
+  ],
 });
 
-// ====== When a New Member Joins ======
+// ====== READY EVENT ======
+client.once("ready", () => {
+  console.log(`Logged in as ${client.user.tag}`);
+});
+
+// ====== WELCOME NEW MEMBERS ======
 client.on("guildMemberAdd", member => {
   const channel = member.guild.channels.cache.get(WELCOME_CHANNEL_ID);
   if (!channel) return console.error("❌ Welcome channel not found!");
 
   channel.send(
-`👋 **HI ${member.user} WELCOME TO NETHERVERSE SMP!**
+`HI ${member.user}, WELCOME TO NETHERVERSE SMP!
 
 📢 Get updates at <#1323572624856715296>
 -----------------------------------------------------
@@ -37,12 +47,12 @@ client.on("guildMemberAdd", member => {
   );
 });
 
-// ====== When a Member Leaves ======
+// ====== GOODBYE MEMBERS ======
 client.on("guildMemberRemove", member => {
   const channel = member.guild.channels.cache.get(LEAVE_CHANNEL_ID);
   if (!channel) return console.error("❌ Goodbye channel not found!");
   channel.send(`😢 **${member.user.tag}** has left **NETHERVERSE SMP**. We’ll miss you! 👋`);
 });
 
-// ====== Login ======
+// ====== LOGIN ======
 client.login(TOKEN);
