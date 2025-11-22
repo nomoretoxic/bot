@@ -20,9 +20,9 @@ const client = new Client({
 });
 
 // ====== CONFIG ======
-const TOKEN = process.env.TOKEN; // Add your token as an environment variable
-const WELCOME_CHANNEL_ID = "1436988286815178833"; // replace with your welcome channel ID
-const LEAVE_CHANNEL_ID = "1436988512594296873";   // replace with your leave channel ID
+const TOKEN = process.env.TOKEN;
+const WELCOME_CHANNEL_ID = "1436988286815178833";
+const LEAVE_CHANNEL_ID = "1436988512594296873";
 
 // ====== READY EVENT ======
 client.once("ready", () => {
@@ -44,7 +44,7 @@ client.on("guildMemberAdd", (member) => {
 ---------------------------------------------------------
 📖Read rules at <#1305377381464277002> 
 ---------------------------------------------------------
-🔌Get ip and port at <#143699221486475677
+🔌Get ip and port at <#143699221486475677>
 ----------------------------------------------------------
 ⚠️Get maintenance updates at <#1436991629583192184>`
     )
@@ -58,8 +58,12 @@ client.on("guildMemberAdd", (member) => {
 client.on("guildMemberRemove", (member) => {
   const channel = member.guild.channels.cache.get(LEAVE_CHANNEL_ID);
   if (!channel) return console.error("Goodbye channel not found!");
-  channel.send(`😢 **${member.user.tag}** has left **NETHERVERSE SMP**. We’ll miss you! 👋``);
+  
+  channel.send(`😢 **${member.user.tag}** has left **NETHERVERSE SMP**. We’ll miss you! 👋`);
 });
 
 // ====== LOGIN ======
 client.login(TOKEN);
+
+
+
