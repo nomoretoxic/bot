@@ -38,13 +38,15 @@ client.on("guildMemberAdd", (member) => {
     .setDescription(
 `HI ${member.user}, WELCOME TO NETHERVERSE SMP!
 
-Get updates at <#1436990110544560140>
+📢Get updates at <#1436990110544560140>
 -----------------------------------------------------
-Chat with our community at <#1436989839705636894>
+💬Chat with our community at <#1436989839705636894>
 ---------------------------------------------------------
-Read rules at <#1305377381464277002>  
+📖Read rules at <#1305377381464277002> 
+---------------------------------------------------------
+🔌Get ip and port at <#143699221486475677
 ----------------------------------------------------------
-Get maintenance updates at <#1436991629583192184>`
+⚠️Get maintenance updates at <#1436991629583192184>`
     )
     .setImage("https://cdn.discordapp.com/attachments/1305377381464277005/1436019007642800300/standard.gif")
     .setThumbnail(member.user.displayAvatarURL({ dynamic: true }));
