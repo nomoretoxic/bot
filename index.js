@@ -56,7 +56,7 @@ Get maintenance updates at <#1436991629583192184>`
 client.on("guildMemberRemove", (member) => {
   const channel = member.guild.channels.cache.get(LEAVE_CHANNEL_ID);
   if (!channel) return console.error("Goodbye channel not found!");
-  channel.send(`${member.user.tag} has left NETHERVERSE SMP. We’ll miss you!`);
+  channel.send(`😢 **${member.user.tag}** has left **NETHERVERSE SMP**. We’ll miss you! 👋``);
 });
 
 // ====== LOGIN ======
