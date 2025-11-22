@@ -49,7 +49,8 @@ client.on("guildMemberAdd", (member) => {
 ⚠️Get maintenance updates at <#1436991629583192184>`
     )
     .setImage("https://cdn.discordapp.com/attachments/1305377381464277005/1436019007642800300/standard.gif")
-    .setThumbnail(member.user.displayAvatarURL({ dynamic: true }));
+    .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
+    .setColor("#00ffcc");
 
   channel.send({ embeds: [embed] });
 });
@@ -58,12 +59,20 @@ client.on("guildMemberAdd", (member) => {
 client.on("guildMemberRemove", (member) => {
   const channel = member.guild.channels.cache.get(LEAVE_CHANNEL_ID);
   if (!channel) return console.error("Goodbye channel not found!");
-  
-  channel.send(`😢 **${member.user.tag}** has left **NETHERVERSE SMP**. We’ll miss you! 👋`);
+
+  const embed = new EmbedBuilder()
+    .setDescription(`😢 **${member.user.tag}** has left **NETHERVERSE SMP**. We’ll miss you! 👋`)
+    .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
+    .setColor("#ff4d4d");
+
+  channel.send({ embeds: [embed] });
 });
 
 // ====== LOGIN ======
 client.login(TOKEN);
+
+
+
 
 
 
