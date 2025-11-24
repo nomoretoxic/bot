@@ -15,18 +15,7 @@ const {
   SlashCommandBuilder
 } = require("discord.js");
 
-const express = require("express");
-const fetch = require("node-fetch");
 require("dotenv").config();
-
-// =========================================
-// 🌐 EXPRESS SERVER (Replit Keep Alive)
-// =========================================
-const app = express();
-const PORT = process.env.PORT || 3000;
-
-app.get("/", (req, res) => res.send("Bot is running!"));
-app.listen(PORT, () => console.log(`🌐 Web server running on port ${PORT}`));
 
 // =========================================
 // 🤖 DISCORD CLIENT
@@ -40,13 +29,6 @@ const client = new Client({
   ],
   partials: [Partials.Channel, Partials.Message, Partials.User]
 });
-const keepAlive = require("./keep_alive.js");
-keepAlive();
-
-// Your bot code below:
-console.log("Main app started!");
-
-
 
 // =========================================
 // 🔧 ENV VARIABLES
@@ -59,13 +41,12 @@ const CLOSED_CATEGORY_ID = process.env.CLOSED_CATEGORY_ID;
 const LOG_CHANNEL_ID = process.env.LOG_CHANNEL_ID;
 const WELCOME_CHANNEL_ID = process.env.WELCOME_CHANNEL_ID;
 const LEAVE_CHANNEL_ID = process.env.LEAVE_CHANNEL_ID;
+const SUPPORT_ROLE_ID = process.env.SUPPORT_ROLE_ID; // support role
 
 // =========================================
 // 📝 SLASH COMMANDS
 // =========================================
 const commands = [
-
-  // /autorole
   new SlashCommandBuilder()
     .setName("autorole")
     .setDescription("Give yourself a role.")
@@ -73,22 +54,17 @@ const commands = [
       opt.setName("role").setDescription("Choose a role").setRequired(true)
     ),
 
-  // /say (admin only)
   new SlashCommandBuilder()
     .setName("say")
     .setDescription("Bot repeats your message (Admin only)")
     .setDefaultMemberPermissions(PermissionsBitField.Flags.Administrator)
     .addStringOption(opt =>
-      opt.setName("message")
-        .setDescription("Message to send")
-        .setRequired(true)
+      opt.setName("message").setDescription("Message to send").setRequired(true)
     ),
 
-  // /ticketpanel
   new SlashCommandBuilder()
     .setName("ticketpanel")
     .setDescription("Send the ticket panel")
-
 ].map(cmd => cmd.toJSON());
 
 // Register Slash Commands
@@ -126,18 +102,18 @@ client.on("guildMemberAdd", (member) => {
 `HI ${member.user}, WELCOME TO NETHERVERSE SMP!
 
 📢 Updates: <#1436990110544560140>
------------------------------------------
+------------------------------------------------
 💬 Chat: <#1436989839705636894>
-----------------------------------------
+-----------------------------------------
 📖 Rules: <#1305377381464277002>
-------------------------------------------
+-----------------------------------------
 🔌 IP & Port: <#1436992214864756776>
-----------------------------------------------
-⚠ Maintenance update at : <#1436991629583192184>`
+---------------------------------------------
+⚠ Maintenance update at: <#1436991629583192184>`
     )
     .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
-    .setColor("#00ffcc");
-    .setimage(https://cdn.discordapp.com/attachments/1305377381464277005/1436019007642800300/standard.gif?ex=692526ab&is=6923d52b&hm=40c6cdf12faea9e3a46d7432570037517b1069ba411ce3b9d0fa29ab93ecc453);
+    .setColor("#00ffcc")
+    .setImage("https://cdn.discordapp.com/attachments/1305377381464277005/1436019007642800300/standard.gif");
 
   channel.send({ embeds: [embed] });
 });
@@ -174,10 +150,7 @@ client.on("messageCreate", async (message) => {
       const logChannel = message.guild.channels.cache.get(LOG_CHANNEL_ID);
       if (logChannel) {
         logChannel.send(
-          `🛑 **Link Deleted**\n` +
-          `👤 User: <@${message.author.id}>\n` +
-          `💬 Message: \`${message.content}\`\n` +
-          `📌 Channel: <#${message.channel.id}>`
+          `🛑 **Link Deleted**\n👤 User: <@${message.author.id}>\n💬 Message: \`${message.content}\`\n📌 Channel: <#${message.channel.id}>`
         );
       }
 
@@ -213,7 +186,16 @@ client.on("interactionCreate", async interaction => {
       parent: OPEN_CATEGORY_ID,
       permissionOverwrites: [
         { id: guild.id, deny: [PermissionsBitField.Flags.ViewChannel] },
-        { id: interaction.user.id,
+        {
+          id: interaction.user.id,
+          allow: [
+            PermissionsBitField.Flags.ViewChannel,
+            PermissionsBitField.Flags.SendMessages,
+            PermissionsBitField.Flags.ReadMessageHistory
+          ]
+        },
+        {
+          id: SUPPORT_ROLE_ID, // Support staff can see it
           allow: [
             PermissionsBitField.Flags.ViewChannel,
             PermissionsBitField.Flags.SendMessages,
@@ -225,7 +207,7 @@ client.on("interactionCreate", async interaction => {
 
     const embed = new EmbedBuilder()
       .setTitle("Ticket Created")
-      .setDescription("Press the button to close this ticket.")
+      .setDescription("A staff member will be with you shortly.\nClick the button below to close this ticket.")
       .setColor("Green");
 
     const row = new ActionRowBuilder().addComponents(
@@ -235,7 +217,11 @@ client.on("interactionCreate", async interaction => {
         .setStyle(ButtonStyle.Danger)
     );
 
-    await ticket.send({ content: `<@${interaction.user.id}>`, embeds: [embed], components: [row] });
+    await ticket.send({
+      content: `<@${interaction.user.id}> | <@&${SUPPORT_ROLE_ID}>`,
+      embeds: [embed],
+      components: [row]
+    });
 
     return interaction.reply({
       content: `🎫 Ticket created: ${ticket}`,
@@ -257,7 +243,6 @@ client.on("interactionCreate", async interaction => {
 client.on("interactionCreate", async interaction => {
   if (!interaction.isChatInputCommand()) return;
 
-  // /autorole
   if (interaction.commandName === "autorole") {
     const role = interaction.options.getRole("role");
     const member = interaction.guild.members.cache.get(interaction.user.id);
@@ -276,13 +261,11 @@ client.on("interactionCreate", async interaction => {
     });
   }
 
-  // /say
   if (interaction.commandName === "say") {
     const text = interaction.options.getString("message");
     return interaction.reply(text);
   }
 
-  // /ticketpanel
   if (interaction.commandName === "ticketpanel") {
     const embed = new EmbedBuilder()
       .setTitle("Support Ticket")
@@ -310,4 +293,4 @@ client.login(TOKEN);
 
 
 
-
+   
