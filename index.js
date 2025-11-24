@@ -137,7 +137,7 @@ client.on("guildMemberAdd", (member) => {
     )
     .setThumbnail(member.user.displayAvatarURL({ dynamic: true }))
     .setColor("#00ffcc");
-    .setimage(https://cdn.discordapp.com/attachments/1305377381464277005/1436019007642800300/standard.gif?ex=692526ab&is=6923d52b&hm=40c6cdf12faea9e3a46d7432570037517b1069ba411ce3b9d0fa29ab93ecc453)
+    .setimage(https://cdn.discordapp.com/attachments/1305377381464277005/1436019007642800300/standard.gif?ex=692526ab&is=6923d52b&hm=40c6cdf12faea9e3a46d7432570037517b1069ba411ce3b9d0fa29ab93ecc453);
 
   channel.send({ embeds: [embed] });
 });
